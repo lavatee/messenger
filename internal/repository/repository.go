@@ -14,6 +14,8 @@ type Messages interface {
 }
 type Chats interface {
 	PostChat(firstUserId int, secondUserId int) (int, error)
+	GetUserChats(userId int) ([]messenger.Chat, error)
+	DeleteChat(chatId int) error
 }
 type Rooms interface {
 }

@@ -9,7 +9,9 @@ CREATE TABLE chats
 (
     id SERIAL PRIMARY KEY,
     first_user_id int references users (id) on delete cascade not null,
-    second_user_id int references users (id) on delete cascade not null
+    second_user_id int references users (id) on delete cascade not null,
+    first_user_name varchar(255) not null,
+    second_user_name varchar(255) not null
 );
 CREATE TABLE messages
 (

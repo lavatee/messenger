@@ -8,7 +8,19 @@ import (
 )
 
 func (e *Endpoint) GetChats(c *gin.Context) {
-
+	id, err := e.GetUserId(c)
+	if err != nil {
+		NewErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+	userChats, err := e.services.GetUserChats(id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"chats": userChats,
+	})
 }
 func (e *Endpoint) PostChat(c *gin.Context) {
 	id, err := e.GetUserId(c)
@@ -32,5 +44,19 @@ func (e *Endpoint) PostChat(c *gin.Context) {
 	})
 }
 func (e *Endpoint) DeleteChat(c *gin.Context) {
+	id := c.Param("id")
+	intId, err := strconv.Atoi(id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
 
+	err = e.services.DeleteChat(intId)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, map[string]string{
+		"status": "ok",
+	})
 }

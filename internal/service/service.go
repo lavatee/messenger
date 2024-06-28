@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/dgrijalva/jwt-go"
+	"github.com/lavatee/messenger"
 	"github.com/lavatee/messenger/internal/repository"
 )
 
@@ -17,6 +18,8 @@ type Messages interface {
 }
 type Chats interface {
 	CreateChat(firstUserId int, secondUserId int) (int, error)
+	GetUserChats(userId int) ([]messenger.Chat, error)
+	DeleteChat(chatId int) error
 }
 type Rooms interface {
 }

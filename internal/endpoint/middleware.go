@@ -46,7 +46,7 @@ func (e *Endpoint) Middleware(c *gin.Context) {
 func (e *Endpoint) GetUserId(c *gin.Context) (int, error) {
 	id, ok := c.Get(userContext)
 	if !ok {
-		return 0, errors.New("user id did not find")
+		return 0, errors.New("user id is not found")
 	}
 	fmt.Println(id, reflect.TypeOf(id))
 	floatID, ok := id.(float64)

@@ -40,7 +40,7 @@ func (e *Endpoint) InitRoutes() *gin.Engine {
 	{
 		api.GET("/users/:id", e.GetUser)
 		api.POST("/chats/:id", e.PostChat)
-		api.GET("/chats/:userid", e.GetChats)
+		api.GET("/chats", e.GetChats)
 		api.DELETE("/chats/:id", e.DeleteChat)
 		api.POST("/messages", e.PostMessage)
 		api.GET("/messages/:chatid", e.GetMessages)
