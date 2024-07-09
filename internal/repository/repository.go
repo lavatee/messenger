@@ -9,8 +9,12 @@ type Auth interface {
 	SignUp(username string, name string, passwordHash string) (int, error)
 	SignIn(username string, passwordHash string) (messenger.User, error)
 	GetUserById(id int) (string, string, error)
+	PutUser(username string, name string, id int) error
 }
 type Messages interface {
+	CreateMessage(message messenger.Message) (int, error)
+	GetChatMessages(firstUserId int, secondUserId int) ([]messenger.Message, error)
+	DeleteMessage(messageId int) error
 }
 type Chats interface {
 	PostChat(firstUserId int, secondUserId int) (int, error)
@@ -18,6 +22,9 @@ type Chats interface {
 	DeleteChat(chatId int) error
 }
 type Rooms interface {
+	JoinRoom(userId int) (int, error)
+	LeaveRoom(userId int, roomId int) (int, error)
+	LeaveMatchMaking(userId int, roomId int) error
 }
 type Repository struct {
 	Auth

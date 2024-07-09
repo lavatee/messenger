@@ -24,6 +24,6 @@ CREATE TABLE rooms
 (
     id SERIAL PRIMARY KEY,
     users_quantity BIGINT not null,
-    first_user_id int references users (id) on delete cascade not null,
-    second_user_id int references users (id) on delete cascade not null
+    first_user_id int,
+    second_user_id int
 );

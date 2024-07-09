@@ -17,7 +17,7 @@ type SignInInput struct {
 	Password string `json:"password"`
 }
 type RefreshInput struct {
-	RefreshToken string `json:"RefreshToken"`
+	RefreshToken string `json:"refresh"`
 }
 
 func (e *Endpoint) SignUp(c *gin.Context) {
@@ -41,14 +41,16 @@ func (e *Endpoint) SignIn(c *gin.Context) {
 		NewErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	access, refresh, err := e.services.SignIn(input.Username, input.Password)
+	id, name, access, refresh, err := e.services.SignIn(input.Username, input.Password)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, map[string]string{
+	c.JSON(http.StatusOK, map[string]interface{}{
 		"AccessToken":  access,
 		"RefreshToken": refresh,
+		"id":           id,
+		"name":         name,
 	})
 }
 func (e *Endpoint) GetUser(c *gin.Context) {
@@ -86,5 +88,32 @@ func (e *Endpoint) Refresh(c *gin.Context) {
 	c.JSON(http.StatusOK, map[string]string{
 		"AccessToken":  access,
 		"RefreshToken": refresh,
+	})
+}
+
+type PutInput struct {
+	Username string `json:"username"`
+	Name     string `json:"name"`
+}
+
+func (e *Endpoint) PutUser(c *gin.Context) {
+	var input PutInput
+	err := c.BindJSON(&input)
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	id, err := e.GetUserId(c)
+	if err != nil {
+		NewErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+	err = e.services.PutUser(input.Username, input.Name, id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, map[string]string{
+		"status": "ok",
 	})
 }

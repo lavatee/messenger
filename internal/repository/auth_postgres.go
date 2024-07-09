@@ -27,7 +27,7 @@ func (r *AuthPostgres) SignUp(username string, name string, passwordHash string)
 }
 func (r *AuthPostgres) SignIn(username string, passwordHash string) (messenger.User, error) {
 	var input messenger.User
-	query := fmt.Sprintf("SELECT id from %s WHERE username=$1 AND password_hash=$2", usersTable)
+	query := fmt.Sprintf("SELECT id, name from %s WHERE username=$1 AND password_hash=$2", usersTable)
 	err := r.db.Get(&input, query, username, passwordHash)
 	return input, err
 }
@@ -36,4 +36,9 @@ func (r *AuthPostgres) GetUserById(id int) (string, string, error) {
 	query := fmt.Sprintf("SELECT username, name from %s WHERE id=$1", usersTable)
 	err := r.db.Get(&input, query, id)
 	return input.Username, input.Name, err
+}
+func (r *AuthPostgres) PutUser(username string, name string, id int) error {
+	query := fmt.Sprintf("UPDATE %s SET username=$1, name=$2 WHERE id=$3", usersTable)
+	_, err := r.db.Exec(query, username, name, id)
+	return err
 }

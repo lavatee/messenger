@@ -38,17 +38,22 @@ func (e *Endpoint) InitRoutes() *gin.Engine {
 	}
 	api := router.Group("/api", e.Middleware)
 	{
+		api.PUT("/users", e.PutUser)
 		api.GET("/users/:id", e.GetUser)
 		api.POST("/chats/:id", e.PostChat)
 		api.GET("/chats", e.GetChats)
 		api.DELETE("/chats/:id", e.DeleteChat)
 		api.POST("/messages", e.PostMessage)
-		api.GET("/messages/:chatid", e.GetMessages)
+		api.GET("/messages/:seconduserid", e.GetMessages)
 		api.DELETE("/messages/:id", e.DeleteMessage)
-		api.POST("/rooms", e.PostRoom)
-		api.GET("/rooms", e.GetRooms)
-		api.DELETE("/rooms/:id", e.DeleteRoom)
-		api.PUT("/rooms/:id", e.PutRoom)
+		api.POST("/rooms/join", e.JoinRoom)
+		api.POST("/rooms/leave/:id", e.LeaveRoom)
+		api.POST("/rooms/leaveall/:id", e.LeaveMatchMaking)
+	}
+	ws := router.Group("/ws")
+	{
+		ws.GET("/rooms/:id/:user", e.WebSocketHandler)
+		ws.GET("/chats/:id/:user", e.WebSocketHandler)
 	}
 	return router
 }

@@ -35,6 +35,7 @@ func main() {
 	handler := endpoint.NewEndpoint(services)
 	srv := new(messenger.Server)
 	go func() {
+
 		if err := srv.Run(viper.GetString("port"), handler.InitRoutes()); err != nil {
 			logrus.Fatalf(err.Error())
 		}
